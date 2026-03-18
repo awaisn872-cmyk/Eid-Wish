@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Eid Mubarak</title>
+
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: url('https://www.transparenttextures.com/patterns/arabesque.png'), linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      color: white;
+      text-align: center;
+      overflow: hidden;
+    }
+
+    .container {
+      position: relative;
+      z-index: 2;
+      margin: 60px auto;
+      padding: 30px;
+      width: 90%;
+      max-width: 400px;
+      border-radius: 20px;
+      background: rgba(255,255,255,0.08);
+      backdrop-filter: blur(12px);
+      box-shadow: 0 0 40px rgba(0,0,0,0.6);
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      animation: glow 2s infinite alternate;
+    }
+
+    @keyframes glow {
+      from { text-shadow: 0 0 10px #fff; }
+      to { text-shadow: 0 0 40px #00ffcc; }
+    }
+
+    input {
+      padding: 12px;
+      border-radius: 12px;
+      border: none;
+      margin-top: 20px;
+      width: 100%;
+    }
+
+    button {
+      margin-top: 12px;
+      padding: 12px;
+      width: 100%;
+      border-radius: 12px;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+      background: linear-gradient(45deg, #00c9ff, #92fe9d);
+    }
+
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+    }
+
+    .gift {
+      margin-top: 20px;
+      cursor: pointer;
+    }
+
+    .box {
+      width: 100px;
+      height: 100px;
+      background: red;
+      margin: auto;
+      position: relative;
+      border-radius: 10px;
+    }
+
+    .lid {
+      width: 110px;
+      height: 20px;
+      background: darkred;
+      position: absolute;
+      top: -20px;
+      left: -5px;
+      border-radius: 5px;
+      transition: 0.5s;
+    }
+
+    .open .lid {
+      transform: rotate(-30deg) translateY(-20px);
+    }
+
+    .watermark {
+      position: fixed;
+      bottom: 10px;
+      right: 10px;
+      text-align: right;
+      opacity: 0.8;
+    }
+
+    .watermark img {
+      width: 50px;
+      border-radius: 50%;
+    }
+
+  </style>
+</head>
+<body onload="autoPlay()">
+
+<canvas id="fireworks"></canvas>
+
+<div class="container">
+  <h1>Eid Mubarak 🌙</h1>
+  <p id="message">Enter your name</p>
+
+  <input type="text" id="name" placeholder="Enter your name">
+  <button onclick="showWish()">✨ Show Wish</button>
+
+  <div class="gift" onclick="openGift()">
+    <div id="giftBox" class="box">
+      <div class="lid"></div>
+    </div>
+    <p>🎁 Click Gift</p>
+  </div>
+</div>
+
+<div class="watermark">
+  <img src="https://i.imgur.com/6VBx3io.png">
+  <small>Muhammad Awais Naveed</small>
+</div>
+
+<audio id="music" loop autoplay>
+  <source src="https://cdn.pixabay.com/audio/2022/03/15/audio_3f5d9c3f6a.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+  function showWish() {
+    let name = document.getElementById("name").value || "Friend";
+    document.getElementById("message").innerText =
+      "🌙 Eid Mubarak " + name + "! May Allah bless you with happiness and success. ✨";
+  }
+
+  function openGift() {
+    let box = document.getElementById("giftBox");
+    box.classList.toggle("open");
+    alert("🎉 Surprise! Eid Mubarak! 🎉");
+  }
+
+  function autoPlay() {
+    document.getElementById("music").play().catch(()=>{});
+  }
+
+  // Fireworks
+  const canvas = document.getElementById('fireworks');
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  let particles = [];
+
+  function createFirework(x, y) {
+    for (let i = 0; i < 60; i++) {
+      particles.push({ x, y, angle: Math.random()*2*Math.PI, speed: Math.random()*5+2, radius:2 });
+    }
+  }
+
+  function animate() {
+    ctx.fillStyle = 'rgba(0,0,0,0.2)';
+    ctx.fillRect(0,0,canvas.width,canvas.height);
+
+    particles.forEach((p,i)=>{
+      p.x += Math.cos(p.angle)*p.speed;
+      p.y += Math.sin(p.angle)*p.speed;
+      p.speed *= 0.95;
+
+      ctx.beginPath();
+      ctx.arc(p.x,p.y,p.radius,0,Math.PI*2);
+      ctx.fillStyle='white';
+      ctx.fill();
+
+      if(p.speed<0.5) particles.splice(i,1);
+    });
+
+    requestAnimationFrame(animate);
+  }
+
+  setInterval(()=>{
+    createFirework(Math.random()*canvas.width, Math.random()*canvas.height/2);
+  },700);
+
+  animate();
+</script>
+
+</body>
+</html>
